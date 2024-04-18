@@ -1,6 +1,4 @@
 const express = require("express");
-const dotenv = require("dotenv")
-dotenv.config()
 const { config } = require("./middleware/config.js");
 const bodyParser = require("body-parser");
 const clientRouter = require("./routes/clientRoutes.js");
@@ -14,7 +12,7 @@ console.log("config onload", config)
 
 
 const API_VERSION = "v1"
-const port = 8020;
+const port = 8000;
 
 const app = express();
 app.use(bodyParser.json());

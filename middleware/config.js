@@ -1,3 +1,6 @@
+const dotenv = require("dotenv")
+dotenv.config()
+
 /**
  * 
  * Chargement des variables de configuration
