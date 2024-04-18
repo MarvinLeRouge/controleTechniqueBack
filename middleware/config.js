@@ -1,6 +1,3 @@
-const dotenv = require("dotenv");
-dotenv.config();
-
 /**
  * 
  * Chargement des variables de configuration
@@ -27,6 +24,8 @@ const configLoad = () => {
         }
         result[key1] = value1
     }
+
+    console.log("configLoad", result)
 
     return result
 }

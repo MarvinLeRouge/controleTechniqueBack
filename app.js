@@ -1,4 +1,7 @@
 const express = require("express");
+const dotenv = require("dotenv")
+dotenv.config()
+const { config } = require("./middleware/config.js");
 const bodyParser = require("body-parser");
 const clientRouter = require("./routes/clientRoutes.js");
 const truckRouter = require("./routes/truckRoutes.js");
@@ -6,13 +9,12 @@ const bridgeRouter = require("./routes/bridgeRoutes.js");
 const rdvRouter = require("./routes/rdvRoutes.js");
 const staticRouter = require("./routes/staticRoutes.js");
 const mongoose = require("mongoose");
-const { config } = require("./middleware/config");
 console.log("config onload", config)
 //require("middleware/utils.js")
 
 
 const API_VERSION = "v1"
-const port = 8000;
+const port = 8020;
 
 const app = express();
 app.use(bodyParser.json());
@@ -36,6 +38,7 @@ const dbConnect = () => {
 
 
 const myinit = () => {
+    console.log("myInit", config)
     dbConnect();
 }
 
