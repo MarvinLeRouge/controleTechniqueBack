@@ -7,7 +7,7 @@ const rdvRouter = require("./routes/rdvRoutes.js");
 const staticRouter = require("./routes/staticRoutes.js");
 const mongoose = require("mongoose");
 const { config } = require("./middleware/config");
-console.log(config)
+console.log("config onload", config)
 //require("middleware/utils.js")
 
 
@@ -20,7 +20,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 const dbConnect = () => {
     console.log("connectToDB >>")
-    console.log("config", config)
+    console.log("config dbConnect", config)
     try {
         mongoose.connect(config["DB_SRC"], {
             autoIndex: true
