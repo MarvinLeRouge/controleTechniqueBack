@@ -33,7 +33,7 @@ const getFormatedDateTime = (dateStr = null) => {
 
 /**
  * 
- * @returns La date courante plus l'heure courante, formatée
+ * @returns La date courante, formatée
  */
 const getFormatedDate = (dateStrOrObj = null) => {
     let dateObj = null
@@ -60,7 +60,36 @@ const getFormatedDate = (dateStrOrObj = null) => {
 
 /**
  * 
- * @returns La date courante plus l'heure courante, formatée
+ * @returns La date courante, formatée version internationale
+ */
+const getFormatedDateIntl = (dateStrOrObj = null) => {
+    let dateObj = null
+    let result = null
+    if(!dateStrOrObj) {
+        dateObj = new Date()
+    }
+    else if((dateStrOrObj instanceof String) || (typeof dateStrOrObj == "string")) {
+        dateObj = new Date(dateStrOrObj)
+    }
+    else if(dateStrOrObj instanceof Date) {
+        dateObj = dateStrOrObj
+    }
+    console.log("dateObj", dateObj)
+    if(dateObj) {
+        let year = dateObj.getFullYear();
+        let month = padLeft(dateObj.getMonth() + 1, 2);
+        let date = padLeft(dateObj.getDate(), 2);
+        result = year + "-" + month + "-" + date
+    }
+
+    return result
+};
+
+
+
+/**
+ * 
+ * @returns L'heure courante, formatée
  */
 const getFormatedTime = (dateStrOrObj = null) => {
     let dateObj = null
@@ -87,6 +116,7 @@ const getFormatedTime = (dateStrOrObj = null) => {
 module.exports = {
     padLeft,
     getFormatedDate,
+    getFormatedDateIntl,
     getFormatedTime,
     getFormatedDateTime
 }

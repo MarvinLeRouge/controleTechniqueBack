@@ -11,7 +11,7 @@ const controller = {
     findAll: async (req, res) => {
         console.log("rdvController findAll");
         const filter = {};
-        model.find(filter).then(result => {
+        model.find(filter).then((result) => {
             if(!result.length) {
                 res.status(200).json({"status":"empty"});
             }
@@ -24,7 +24,7 @@ const controller = {
     findById: async (req, res) => {
         console.log("rdvController findById");
         const filter = {"_id":req.params.id};
-        model.find(filter).then(result => {
+        model.find(filter).then((result) => {
             if(!result.length) {
                 res.status(200).json({"status":"empty"});
             }
@@ -43,9 +43,9 @@ const controller = {
         })
         const errors = doc.validateSync();
         if(!errors) {
-            doc.save().then(savedDoc => {
+            doc.save().then((savedDoc) => {
                 console.log("savedDoc", savedDoc)
-                truckModel.find({"_id":savedDoc.truck}).populate("client").then(truck => {
+                truckModel.find({"_id":savedDoc.truck}).populate("client").then((truck) => {
                     truck = truck[0]
                     console.log("truckModel", truck)    
                     let client = truck.client
@@ -82,6 +82,46 @@ const controller = {
 
         res.status(201).json(result);
     },
+
+    synthese: async(req, res) => {
+        console.log("rdvController synthese")
+
+        let today = new Date()
+        let tomorrow = new Date()
+        tomorrow.setDate(today.getDate() + 1)
+        tomorrow = utils.getFormatedDateIntl(tomorrow)
+        const filter = {
+            date: {
+                $gte: tomorrow
+            }
+        };
+
+        model.find(filter).sort({date: "asc"}).then((rdvs) => {
+            if(!rdvs.length) {
+                res.status(200).json({"status":"empty"});
+            }
+            else {
+                let result = {}
+                let rdvDateDate = null
+                let rdvDateTime = null
+                rdvs.forEach(rdv => {
+                    console.log(rdv)
+                    rdvDateDate = utils.getFormatedDateIntl(rdv.date)
+                    rdvDateTime = rdv.date.getHours()
+                    if(!(rdvDateDate in result)) {
+                        result[rdvDateDate] = {}
+                    }
+                    if(!(rdvDateTime in result[rdvDateDate])) {
+                        result[rdvDateDate][rdvDateTime] = 0;
+                    }
+                    result[rdvDateDate][rdvDateTime]++;
+                });
+                res.status(200).json({"status":"ok", "data":result});
+            }
+        })
+
+
+    }
 
 
 
