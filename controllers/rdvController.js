@@ -105,7 +105,6 @@ const controller = {
                 let rdvDateDate = null
                 let rdvDateTime = null
                 rdvs.forEach(rdv => {
-                    console.log(rdv)
                     rdvDateDate = utils.getFormatedDateIntl(rdv.date)
                     rdvDateTime = rdv.date.getHours()
                     if(!(rdvDateDate in result)) {
