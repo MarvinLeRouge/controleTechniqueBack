@@ -1,34 +1,41 @@
 const express = require("express");
 
-const model = {
-    "lundi": {
+const model = [
+    {
+        "jour": "lundi",
         "start": 8,
         "stop": 18
     },
-    "mardi": {
+    {
+        "jour": "mardi",
         "start": 8,
         "stop": 18
     },
-    "mercredi": {
+    {
+        "jour": "mercredi",
         "start": 8,
         "stop": 18
     },
-    "jeudi": {
+    {
+        "jour": "jeudi",
         "start": 8,
         "stop": 18
     },
-    "vendredi": {
+    {
+        "jour": "vendredi",
         "start": 8,
         "stop": 18
     },
-    "samedi": {
+    {
+        "jour": "samedi",
         "start": 8,
         "stop": 12
     },
-    "dimanche": {
+    {
+        "jour": "dimanche",
         "start": null,
         "stop": null
     },
-}
+]
 
 module.exports = model

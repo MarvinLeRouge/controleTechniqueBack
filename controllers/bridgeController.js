@@ -1,6 +1,7 @@
 const express = require("express");
 const { config } = require("../middleware/config");
 const model = require("../models/bridgeModel.js")
+const rdvModel = require("../models/rdvModel.js")
 
 const controller = {
     findAll:  async (req, res) => {
@@ -73,7 +74,57 @@ const controller = {
             console.log(error)
             res.status(500).json({"status":"pb", "msg":"Erreur serveur. Admin informé."})
         }
-    }
+    },
+
+    firstAvailable: async (req, res) => {
+        console.log("bridgeController nextAvailable");
+        try {
+            const filter = {"date": req.params.rdvDate};
+            rdvModel.find(filter).then(result => {
+                let bridgeIdPris = []
+                result.forEach(function(item) {
+                    bridgeIdPris.push(item["bridge"])
+                })
+                return bridgeIdPris
+            }).then(bridgeIdPris => {
+                console.log("bridgeIdPris", bridgeIdPris)
+                return model.find({}).then(bridges => {
+                    let bridgeIdAll = []
+                    bridges.forEach(function(bridge) {
+                        bridgeIdAll.push(bridge["_id"].toString())
+                    })
+                    console.log("bridgeIdAll", bridgeIdAll)
+                    let bridgeIdDispos = []
+                    console.log("bridgeIdDispos", bridgeIdDispos)
+                    bridgeIdAll.forEach((id) => {
+                        console.log(id, id.toString())
+                        let found = false
+                        bridgeIdPris.forEach((idPris) => {
+                            if(id.toString() == idPris.toString()) {
+                                found = true
+                            }
+                        })
+                        if(!found) {
+                            bridgeIdDispos.push(id)
+                        }
+                    })
+                    console.log("bridgeIdDispos", bridgeIdDispos)
+
+                    return bridgeIdDispos
+                })
+            }).then(bridgeIdDispos => {
+                bridgeIdDispos = bridgeIdDispos.slice(0, 1)
+                console.log(bridgeIdDispos)
+                res.status(200).json({"status":"ok", "data":bridgeIdDispos});
+            })
+        }
+        catch(error) {
+            console.log(error)
+            res.status(500).json({"status":"pb", "msg":"Erreur serveur. Admin informé."})
+        }
+    },
+
+
 }
 
 module.exports = controller

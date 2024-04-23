@@ -27,6 +27,11 @@ const configLoad = () => {
         }
         result[key1] = value1
     }
+    for(key in result) {
+        if(result[key] == parseInt(result[key])) {
+            result[key] = parseInt(result[key])
+        }
+    }
 
     console.log("configLoad", result)
 

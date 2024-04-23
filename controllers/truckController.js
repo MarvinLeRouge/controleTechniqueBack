@@ -36,7 +36,7 @@ const controller = {
             "immatriculation": req.body.immatriculation,
             "marque": req.body.marque,
             "modele": req.body.modele,
-            "client": req.body.clientId
+            "client": req.body.client
         })
         const errors = doc.validateSync();
         if(!errors) {

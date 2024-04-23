@@ -4,6 +4,7 @@ const bridgeController = require("../controllers/bridgeController.js");
 
 router.get("/", bridgeController.findAll);
 router.get("/count", bridgeController.countAll);
+router.get("/firstAvailable/:rdvDate", bridgeController.firstAvailable);
 router.get("/:id", bridgeController.findById);
 router.post("/", bridgeController.create)
 

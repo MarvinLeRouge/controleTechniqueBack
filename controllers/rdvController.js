@@ -4,6 +4,7 @@ const model = require("../models/rdvModel.js")
 const truckModel = require("../models/truckModel.js")
 const bridgeModel = require("../models/bridgeModel.js")
 const clientModel = require("../models/clientModel.js")
+const horaireModel = require("../models/horaireModel.js")
 const email = require("../middleware/email.js")
 const utils = require("../middleware/utils.js")
 
@@ -37,9 +38,9 @@ const controller = {
     create: async (req, res) => {
         console.log("rdvController create");
         const doc = new model({
-            "date": req.body.rdvDate,
-            "truck": req.body.truckId,
-            "bridge": req.body.bridgeId
+            "date": req.body.date,
+            "truck": req.body.truck,
+            "bridge": req.body.bridge
         })
         const errors = doc.validateSync();
         if(!errors) {
@@ -85,7 +86,16 @@ const controller = {
 
     synthese: async(req, res) => {
         console.log("rdvController synthese")
-
+        let heureStartMin = 24
+        let heureStopMax = 0
+        horaireModel.forEach(function(horairesJour) {
+            if(!Object.is(horairesJour.start, null)) {
+                heureStartMin = Math.min(heureStartMin, horairesJour.start)
+            }
+            if(!Object.is(horairesJour.stop, null)) {
+                heureStopMax = Math.max(heureStopMax, horairesJour.stop)
+            }
+        })
         let today = new Date()
         let tomorrow = new Date()
         tomorrow.setDate(today.getDate() + 1)
@@ -97,10 +107,14 @@ const controller = {
         };
 
         model.find(filter).sort({date: "asc"}).then((rdvs) => {
+            console.log("in model", heureStartMin, heureStopMax)
+
             if(!rdvs.length) {
                 res.status(200).json({"status":"empty"});
             }
             else {
+                console.log("VISIT_DURATION_H", config["VISIT_DURATION_H"])
+                console.log("CALC VISIT_DURATION_H", 5 + config["VISIT_DURATION_H"])
                 let result = {}
                 let rdvDateDate = null
                 let rdvDateTime = null
@@ -109,11 +123,14 @@ const controller = {
                     rdvDateTime = rdv.date.getHours()
                     if(!(rdvDateDate in result)) {
                         result[rdvDateDate] = {}
-                    }
-                    if(!(rdvDateTime in result[rdvDateDate])) {
-                        result[rdvDateDate][rdvDateTime] = 0;
+                        for(let h = heureStartMin; h < heureStopMax; h+= config["VISIT_DURATION_H"]) {
+                            console.log("h", h)
+                            result[rdvDateDate][h] = 0;    
+                        }
+                        console.log("result", result)
                     }
                     result[rdvDateDate][rdvDateTime]++;
+                    console.log("result", result)                    
                 });
                 res.status(200).json({"status":"ok", "data":result});
             }
