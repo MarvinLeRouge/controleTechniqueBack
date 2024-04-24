@@ -1,9 +1,11 @@
 const express = require("express");
 const cors = require('cors');
+/*
 const corsOptions = {
     origin: ['http://localhost:5173', 'https://controle-technique-front.vercel.app/'],
     optionsSuccessStatus: 200,
 };
+*/
 const { config } = require("./middleware/config.js");
 const bodyParser = require("body-parser");
 const clientRouter = require("./routes/clientRoutes.js");
@@ -20,7 +22,10 @@ const API_VERSION = "v1"
 const port = 8000;
 
 const app = express();
+/*
 app.use(cors(corsOptions))
+*/
+app.use(cors())
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
