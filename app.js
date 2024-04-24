@@ -1,11 +1,7 @@
 const express = require("express");
+const swaggerJsDoc = require("swagger-jsdoc")
+const swaggerUi = require("swagger-ui-express")
 const cors = require('cors');
-/*
-const corsOptions = {
-    origin: ['http://localhost:5173', 'https://controle-technique-front.vercel.app/'],
-    optionsSuccessStatus: 200,
-};
-*/
 const { config } = require("./middleware/config.js");
 const bodyParser = require("body-parser");
 const clientRouter = require("./routes/clientRoutes.js");
@@ -15,7 +11,6 @@ const rdvRouter = require("./routes/rdvRoutes.js");
 const staticRouter = require("./routes/staticRoutes.js");
 const mongoose = require("mongoose");
 console.log("config onload", config)
-//require("middleware/utils.js")
 
 
 const API_VERSION = "v1"
@@ -61,6 +56,33 @@ app.use(`/api/${API_VERSION}/truck`, truckRouter);
 // Lancement
 console.clear();
 myinit();
+
+const swaggerOptions = {
+    definition: {
+        openapi: "3.0.0",
+        info: {
+            title: "Truckbuster API documentation",
+            version: "0.1",
+            description: "Truckbuster's API is a simple API for trucks technical inspection. Based on nodeJS.",
+            contact: {
+                name: "Jean Ceugniet",
+                email: "jean.ceugniet@gmail.com"
+            }
+        },
+        servers: [
+            {
+                url: config["API_URL"],
+            },
+        ]
+    },
+    apis: ["./routes/*.js"],
+}
+const spacs = swaggerJsDoc(swaggerOptions)
+app.use(
+    "/api-doc",
+    swaggerUi.serve,
+    swaggerUi.setup(spacs)
+)
 app.listen(port, () => {
     console.log("Listening");
 });
