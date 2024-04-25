@@ -107,33 +107,22 @@ const controller = {
         };
 
         model.find(filter).sort({date: "asc"}).then((rdvs) => {
-            console.log("in model", heureStartMin, heureStopMax)
-
-            if(!rdvs.length) {
-                res.status(200).json({"status":"empty"});
-            }
-            else {
-                console.log("VISIT_DURATION_H", config["VISIT_DURATION_H"])
-                console.log("CALC VISIT_DURATION_H", 5 + config["VISIT_DURATION_H"])
-                let result = {}
-                let rdvDateDate = null
-                let rdvDateTime = null
-                rdvs.forEach(rdv => {
-                    rdvDateDate = utils.getFormatedDateIntl(rdv.date)
-                    rdvDateTime = rdv.date.getHours()
-                    if(!(rdvDateDate in result)) {
-                        result[rdvDateDate] = {}
-                        for(let h = heureStartMin; h < heureStopMax; h+= config["VISIT_DURATION_H"]) {
-                            console.log("h", h)
-                            result[rdvDateDate][h] = 0;    
-                        }
-                        console.log("result", result)
+            let result = {}
+            let rdvDateDate = null
+            let rdvDateTime = null
+            rdvs.forEach(rdv => {
+                rdvDateDate = utils.getFormatedDateIntl(rdv.date)
+                rdvDateTime = rdv.date.getHours()
+                if(!(rdvDateDate in result)) {
+                    result[rdvDateDate] = {}
+                    for(let h = heureStartMin; h < heureStopMax; h+= config["VISIT_DURATION_H"]) {
+                        result[rdvDateDate][h] = 0;    
                     }
-                    result[rdvDateDate][rdvDateTime]++;
-                    console.log("result", result)                    
-                });
-                res.status(200).json({"status":"ok", "data":result});
-            }
+                }
+                result[rdvDateDate][rdvDateTime]++;
+                console.log("result", result)                    
+            });
+            res.status(200).json({"status":"ok", "data":result});
         })
 
 
