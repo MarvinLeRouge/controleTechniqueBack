@@ -1,4 +1,4 @@
-# Truckbuster back
+# Truckbuster back (NodeJs)
 
 Ce projet a pour but d'aborder l'ensemble des technologies et des méthodologies utilisées dans un projet d'application full js. Ce repo contient le front, qui est déployé sur vercel.
 
